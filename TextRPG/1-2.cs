@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using TextRPG;
+using static TextRPG.Shop;
 
 namespace TextRPG
 {
@@ -103,8 +104,8 @@ namespace TextRPG
                 Console.Clear();
                 Console.WriteLine("던전입장");
                 Console.WriteLine("이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.\n");
-                Console.WriteLine("1. 쉬운 던전\t | 방어력 5 이상 권장");
-                Console.WriteLine("2. 일반 던전\t | 방어력 11 이상 권장");
+                Console.WriteLine("1. 쉬운 던전\t   | 방어력 5 이상 권장");
+                Console.WriteLine("2. 일반 던전\t   | 방어력 11 이상 권장");
                 Console.WriteLine("3. 어려운 던전\t | 방어력 17 이상 권장");
                 Console.WriteLine("0. 나가기\n");
                 Console.Write("원하시는 행동을 입력해주세요.\n>> ");
@@ -223,13 +224,13 @@ namespace TextRPG
             Hp -= amount;
             if (Hp < 0) Hp = 0;
         }
-        public void ChangeJob(string newJob)
-        {
-            Job = newJob;
-            BaseAtk += 5;
-            BaseDef += 3;
-            Console.WriteLine("공격력 +5 / 방어력 +3 증가!");
-        }
+        //public void ChangeJob(string newJob)
+        //{
+        //    Job = newJob;
+        //    BaseAtk += 5;
+        //    BaseDef += 3;
+        //    Console.WriteLine("공격력 +5 / 방어력 +3 증가!");
+        //}
 
         public void AddDungeonClear()
         {
@@ -330,13 +331,6 @@ namespace TextRPG
                 {
                     Item selectedItem = inventory[index - 1];
 
-                    if (selectedItem.Type == ItemType.Consumable)
-                    {
-                        Console.WriteLine("소모품은 장착할 수 없습니다.");
-                        Console.ReadKey();
-                        continue;
-                    }
-
                     if (selectedItem.IsEquipped)
                     {
                         selectedItem.IsEquipped = false;
@@ -383,17 +377,17 @@ namespace TextRPG
 
             ShopItems = new List<Item>()
             {
-                new Item("가죽 갑옷", 0, 3, "도적이나 사냥꾼들이 즐겨 입는 갑옷이다.", 600, ItemType.Armor),
-                new Item("사슬 갑옷", 0, 6, "수련에 도움을 주는 갑옷입니다.", 1500, ItemType.Armor),
-                new Item("판금 흉갑", 0, 9, "무쇠로 만들어져 튼튼한 흉갑입니다.", 3000, ItemType.Armor),
-                new Item("풀 플레이트 갑옷", 0, 15, "관절부분이 유연하게 움직일 수 있게 개선된 제국 기사단제 전신 갑옷입니다.", 5000, ItemType.Armor),
-                new Item("낡은 검", 2, 0, "쉽게 볼 수 있는 낡은 검 입니다.", 600,ItemType.Weapon),
-                new Item("바이킹 도끼", 5, 0, "야만인들이 주로 사용했던 투박하고 무거운 도끼입니다.", 1300,ItemType.Weapon),
-                new Item("균형잡힌 롱소드", 11, 0, "기사가 쓸 법한 롱소드입니다.", 2800,ItemType.Weapon),
-                new Item("미사메나츠", 15, 0, "살인귀가 쓰던 검으로 피를 갈망하는 저주가 서려있다.", 4000,ItemType.Weapon),
-                new Item("롱기누스", 20, 0, "신조차 죽일 수 있는 전설의 창입니다.", 10000,ItemType.Weapon),
-                new Item("운명의 나침반", 2, 2, "축복이 걸린 아이템입니다. '길을 잃은 자에게 희망을'", 3000, ItemType.Accessory),
-                new Item("불패의 기", 5, 5, "전란의 시대 정복왕이 사용했던 깃발", 8000, ItemType.Accessory)
+                new Item("가죽 갑옷      ", 0, 3, "도적이나 사냥꾼들이 즐겨 입는 갑옷이다.        ", 600, ItemType.Armor),
+                new Item("사슬 갑옷      ", 0, 6, "수련에 도움을 주는 갑옷입니다.                 ", 1500, ItemType.Armor),
+                new Item("판금 흉갑      ", 0, 9, "무쇠로 만들어져 튼튼한 흉갑입니다.             ", 3000, ItemType.Armor),
+                new Item("풀플레이트 아머", 0, 15, "관절부분이 유연하게 개선된 전신 방어구입니다. ", 5000, ItemType.Armor),
+                new Item("낡은 검        ", 2, 0, "쉽게 볼 수 있는 낡은 검 입니다.                ", 600,ItemType.Weapon),
+                new Item("바이킹 도끼    ", 5, 0, "야만인들이 주로 사용했던 투박하고 도끼입니다.  ", 1300,ItemType.Weapon),
+                new Item("균형잡힌 롱소드", 11, 0, "기사가 쓸 법한 롱소드입니다.                  ", 2800,ItemType.Weapon),
+                new Item("미사메나츠     ", 15, 0, "피를 갈망하는 저주가 서린 검이다.             ", 4000,ItemType.Weapon),
+                new Item("롱기누스       ", 20, 0, "신조차 죽일 수 있는 전설의 창입니다.          ", 10000,ItemType.Weapon),
+                new Item("운명의 나침반  ", 2, 2, "축복이 걸린 아이템입니다. '길을 잃은 자에게 희망을'", 3000, ItemType.Accessory),
+                new Item("불패의 기      ", 5, 5, "전란의 시대 정복왕이 사용했던 깃발             ", 8000, ItemType.Accessory)
             };
         }
 
@@ -443,7 +437,7 @@ namespace TextRPG
                 for (int i = 0; i < ShopItems.Count; i++)
                 {
                     var item = ShopItems[i];
-                    string status = player.HasItem(item) || (item.Type == ItemType.Consumable && item.Name == "기사 전직서" && player.Job == "기사") ? "구매완료" : $"{item.Price} G";
+                    string status = player.HasItem(item) ? "구매완료" : $"{item.Price} G";
                     Console.WriteLine($"- {i + 1}. {item.Name}\t | {item.GetEffect()}\t | {item.Description}\t | {status}");
                 }
 
@@ -457,32 +451,24 @@ namespace TextRPG
                 {
                     Item selectedItem = ShopItems[index - 1];
 
-                    bool isConsumableAndUsed =
-                        selectedItem.Type == ItemType.Consumable &&
-                        selectedItem.Name == "기사 전직서" &&
-                        player.Job == "기사";
 
-                    if (player.HasItem(selectedItem) || isConsumableAndUsed)
+                    if (player.HasItem(selectedItem))
                     {
                         Console.WriteLine("이미 구매한 아이템입니다.");
                         Console.ReadKey();
-                        continue;
                     }
-
-                    if (player.Gold < selectedItem.Price)
-                    {
-                        Console.WriteLine("Gold가 부족합니다.");
-                        Console.ReadKey();
-                        continue;
-                    }                                                           
-                    else // 일반 아이템 (장비, 장식품)
+                    else if (player.Gold >= selectedItem.Price)
                     {
                         player.Gold -= selectedItem.Price;
                         player.AddItem(selectedItem);
-                        Console.WriteLine($"{selectedItem.Name}을(를) 구매했습니다.");
+                        Console.WriteLine($"{selectedItem.Name}을(를) 구매했습니다!");
+                        Console.ReadKey();
                     }
-
-                    Console.ReadKey();
+                    else
+                    {
+                        Console.WriteLine("Gold가 부족합니다.");
+                        Console.ReadKey();
+                    }
                 }
                 else
                 {
@@ -506,23 +492,23 @@ namespace TextRPG
             public int Price { get; private set; }         // 가격
             public ItemType Type { get; private set; }     // 아이템 종류
             public bool IsEquipped { get; set; }           // 장착 여부
-        
-        public Item(string name, int atk, int def, string desc, int price, ItemType type)
-        { 
-            Name = name;
-            Atk = atk;
-            Def = def;
-            Description = desc;
-            Price = price;
-            Type = type;
-            IsEquipped = false;
-        }
-        public string GetEffect()
+
+            public Item(string name, int atk, int def, string description, int price, ItemType type)
             {
-                List<string> effects = new List<string>();
-                if (Atk != 0) effects.Add($"공격력 +{Atk}");
-                if (Def != 0) effects.Add($"방어력 +{Def}");
-                return effects.Count > 0 ? string.Join(" / ", effects) : "효과 없음";
+                Name = name;
+                Atk = atk;
+                Def = def;
+                Description = description;
+                Price = price;
+                Type = type;
+                IsEquipped = false;
+            }
+            public string GetEffect()
+            {
+                if (Atk > 0 && Def > 0) return $"공격력 +{Atk}, 방어력 +{Def}";
+                else if (Atk > 0) return $"공격력 +{Atk}";
+                else if (Def > 0) return $"방어력 +{Def}";
+                else return "효과 없음";
             }
         }
     }
