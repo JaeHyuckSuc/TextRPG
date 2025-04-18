@@ -107,6 +107,7 @@ namespace TextRPG
                 Console.WriteLine("1. 쉬운 던전\t   | 방어력 5 이상 권장");
                 Console.WriteLine("2. 일반 던전\t   | 방어력 11 이상 권장");
                 Console.WriteLine("3. 어려운 던전\t | 방어력 17 이상 권장");
+                Console.WriteLine("4. 보스 던전\t   | 방어력 24 이상 권장");
                 Console.WriteLine("0. 나가기\n");
                 Console.Write("원하시는 행동을 입력해주세요.\n>> ");
 
@@ -122,6 +123,7 @@ namespace TextRPG
                     case "1": requiredDef = 5; baseReward = 1000; dungeonName = "쉬운 던전"; break;
                     case "2": requiredDef = 11; baseReward = 1700; dungeonName = "일반 던전"; break;
                     case "3": requiredDef = 17; baseReward = 2500; dungeonName = "어려운 던전"; break;
+                    case "4": requiredDef = 24; baseReward = 4000; dungeonName = "보스 던전"; break;
                     default:
                         Console.WriteLine("잘못된 입력입니다.");
                         Console.ReadKey();
@@ -145,10 +147,28 @@ namespace TextRPG
             int hpLossBase = rand.Next(20, 36);
             int defDiff = recommendedDef - totalDef;
             hpLossBase += defDiff;
-
             if (hpLossBase < 0) hpLossBase = 0;
+
             int actualHpLoss = isFail ? hpLossBase / 2 : hpLossBase;
             player.ReduceHp(actualHpLoss);
+
+            //  체력 0 이하일 경우: 골드 30% 손실 + 체력 10 회복
+            if (player.Hp <= 0)
+            {
+                int goldLost = (int)(player.Gold * 0.3);
+                player.Gold -= goldLost;
+
+                Console.Clear();
+                Console.WriteLine("던전 도중 쓰러졌습니다!");
+                Console.WriteLine("체력이 0이 되어 강제로 후퇴합니다...");
+                Console.WriteLine($"체력 {beforeHp} -> 0 (후퇴 후 회복: 10)");
+                Console.WriteLine($"Gold {beforeGold} G -> {player.Gold} G ( -{goldLost} G )");
+
+                Console.WriteLine("\n0. 나가기");
+                Console.Write("\n원하시는 행동을 입력해주세요.\n>> ");
+                Console.ReadLine();
+                return;
+            }
 
             if (isFail)
             {
@@ -158,21 +178,14 @@ namespace TextRPG
             }
             else
             {
-                int minPercent = 0;
-                int maxPercent = 0;
+                // 원하는 방식으로 보상 계산 (공격력 ~ 공격력*2 % 보너스)
+                int bonusPercentMin = totalAtk;
+                int bonusPercentMax = totalAtk * 2;
+                int bonusPercent = rand.Next(bonusPercentMin, bonusPercentMax + 1);
+                int totalReward = (int)(baseReward * (1 + bonusPercent / 100.0));
+                int bonusGold = totalReward - baseReward;
 
-                switch (baseReward)
-                {
-                    case 1000: minPercent = 50; maxPercent = 150; break;   // 쉬운 던전: 50~150%
-                    case 1700: minPercent = 75; maxPercent = 200; break;   // 일반 던전: 75~200%
-                    case 2500: minPercent = 100; maxPercent = 250; break;  // 어려운 던전: 100~250%
-                }
-
-                int bonusPercent = rand.Next(minPercent, maxPercent + 1);
-                int bonusGold = baseReward * bonusPercent / 100;
-                int totalGold = baseReward + bonusGold;
-
-                player.Gold += totalGold;
+                player.Gold += totalReward;
                 player.AddDungeonClear();
 
                 Console.Clear();
@@ -182,7 +195,7 @@ namespace TextRPG
 
                 Console.WriteLine("[탐험 결과]");
                 Console.WriteLine($"체력 {beforeHp} -> {player.Hp}");
-                Console.WriteLine($"Gold {beforeGold} G -> {player.Gold} G ( +{totalGold} G )");
+                Console.WriteLine($"Gold {beforeGold} G -> {player.Gold} G ( +{bonusGold} G | 보너스 {bonusPercent}% )");
             }
 
             Console.WriteLine("\n0. 나가기");
@@ -305,6 +318,7 @@ namespace TextRPG
                 }
             }
         }
+        // 인벤토리 - 장착 관리
 
         public void EquipItems()
         {
@@ -513,6 +527,3 @@ namespace TextRPG
         }
     }
 }
-
-
-    
