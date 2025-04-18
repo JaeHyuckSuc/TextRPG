@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using TextRPG;
 
 namespace TextRPG
@@ -390,7 +392,6 @@ namespace TextRPG
                 new Item("균형잡힌 롱소드", 11, 0, "기사가 쓸 법한 롱소드입니다.", 2800,ItemType.Weapon),
                 new Item("미사메나츠", 15, 0, "살인귀가 쓰던 검으로 피를 갈망하는 저주가 서려있다.", 4000,ItemType.Weapon),
                 new Item("롱기누스", 20, 0, "신조차 죽일 수 있는 전설의 창입니다.", 10000,ItemType.Weapon),
-                new Item("기사 전직서", 0, 0, "기사로 전직합니다. 레벨 5 이상 시 구매 가능", 5000, ItemType.Consumable),
                 new Item("운명의 나침반", 2, 2, "축복이 걸린 아이템입니다. '길을 잃은 자에게 희망을'", 3000, ItemType.Accessory),
                 new Item("불패의 기", 5, 5, "전란의 시대 정복왕이 사용했던 깃발", 8000, ItemType.Accessory)
             };
@@ -473,29 +474,7 @@ namespace TextRPG
                         Console.WriteLine("Gold가 부족합니다.");
                         Console.ReadKey();
                         continue;
-                    }
-
-                    // 소모품 처리
-                    if (selectedItem.Type == ItemType.Consumable)
-                    {
-                        if (selectedItem.Name == "기사 전직서")
-                        {
-                            if (player.Level >= 5)
-                            {
-                                player.Gold -= selectedItem.Price;
-                                player.ChangeJob("기사");
-                                Console.WriteLine("전직이 완료되었습니다!");
-                            }
-                            else
-                            {
-                                Console.WriteLine("레벨이 부족하여 구매할 수 없습니다. (레벨 5 이상 필요)");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine($"{selectedItem.Name}은(는) 현재 사용할 수 없습니다.");
-                        }
-                    }
+                    }                                                           
                     else // 일반 아이템 (장비, 장식품)
                     {
                         player.Gold -= selectedItem.Price;
@@ -517,35 +496,37 @@ namespace TextRPG
             Weapon,
             Armor,
             Accessory,
-            Consumable
         }
         public class Item
         {
-            public string Name { get; private set; }
-            public int Atk { get; private set; }
-            public int Def { get; private set; }
-            public string Description { get; private set; }
-            public int Price { get; private set; }
-            public bool IsEquipped { get; set; }
-            public ItemType Type { get; private set; }
-
-            public Item(string name, int atk, int def, string desc, int price, ItemType type)
+            public string Name { get; private set; }       // 아이템 이름
+            public int Atk { get; private set; }           // 공격력 증가 수치
+            public int Def { get; private set; }           // 방어력 증가 수치
+            public string Description { get; private set; } // 설명
+            public int Price { get; private set; }         // 가격
+            public ItemType Type { get; private set; }     // 아이템 종류
+            public bool IsEquipped { get; set; }           // 장착 여부
+        
+        public Item(string name, int atk, int def, string desc, int price, ItemType type)
+        { 
+            Name = name;
+            Atk = atk;
+            Def = def;
+            Description = desc;
+            Price = price;
+            Type = type;
+            IsEquipped = false;
+        }
+        public string GetEffect()
             {
-                Name = name;
-                Atk = atk;
-                Def = def;
-                Description = desc;
-                Price = price;
-                Type = type;
-                IsEquipped = false;
-            }
-
-            public string GetEffect()
-            {
-                if (Atk > 0) return $"공격력 +{Atk}";
-                else if (Def > 0) return $"방어력 +{Def}";
-                else return "효과 없음";
+                List<string> effects = new List<string>();
+                if (Atk != 0) effects.Add($"공격력 +{Atk}");
+                if (Def != 0) effects.Add($"방어력 +{Def}");
+                return effects.Count > 0 ? string.Join(" / ", effects) : "효과 없음";
             }
         }
     }
 }
+
+
+    
