@@ -138,7 +138,7 @@ namespace TextRPG
         {
             Random rand = new Random();
             int totalDef = player.BaseDef + player.GetBonusDef();
-            int totalAtk = player.BaseAtk + player.GetBonusAtk();
+            double totalAtk = player.BaseAtk + player.GetBonusAtk();
             int beforeHp = player.Hp;
             int beforeGold = player.Gold;
 
@@ -179,9 +179,9 @@ namespace TextRPG
             else
             {
                 // 원하는 방식으로 보상 계산 (공격력 ~ 공격력*2 % 보너스)
-                int bonusPercentMin = totalAtk;
-                int bonusPercentMax = totalAtk * 2;
-                int bonusPercent = rand.Next(bonusPercentMin, bonusPercentMax + 1);
+                double bonusPercentMin = totalAtk;
+                double bonusPercent = bonusPercentMin + rand.NextDouble() * ((bonusPercentMin * 2 +1) - bonusPercentMin);
+                
                 int totalReward = (int)(baseReward * (1 + bonusPercent / 100.0));
                 int bonusGold = totalReward - baseReward;
 
@@ -209,7 +209,7 @@ namespace TextRPG
         public string CharacterName { get; private set; }
         public string Job { get; private set; }
         public int Level { get; private set; } = 1;
-        public int BaseAtk { get; private set; } = 10;
+        public double BaseAtk { get; private set; } = 10;
         public int BaseDef { get; private set; } = 5;
         public int BaseHp { get; private set; } = 100;
         public int Gold { get; set; } = 1500;
@@ -251,7 +251,7 @@ namespace TextRPG
             if (dungeonClearCount >= Level && Level < 5)
             {
                 Level++;
-                BaseAtk += 1;
+                BaseAtk += 0.5;
                 BaseDef += 1;
                 dungeonClearCount = 0;
                 Console.WriteLine($"\n[레벨업!] 레벨이 상승했습니다! Lv.{Level}");
@@ -264,7 +264,7 @@ namespace TextRPG
             Console.Clear();
             int bonusAtk = GetBonusAtk();
             int bonusDef = GetBonusDef();
-            int totalAtk = BaseAtk + bonusAtk;
+            double totalAtk = BaseAtk + bonusAtk;
             int totalDef = BaseDef + bonusDef;
 
             Console.WriteLine("상태 보기");
